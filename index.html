@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FANGS VFX | Bloody Motion That Grabs Eyes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Impact:wght@400;700&family=Creepster&display=swap');
+
+        :root { --blood-red: #b91c1c; }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #0a0000;
+            color: #f1f1f1;
+            overflow-x: hidden;
+        }
+
+        .metallic {
+            font-family: 'Impact', sans-serif;
+            letter-spacing: 0.1em;
+            color: #e0e0e0;
+            text-shadow: 0 0 8px rgba(225, 29, 72, 0.5), 0 0 15px rgba(185, 28, 28, 0.3);
+        }
+
+        .hero-bg { background: linear-gradient(rgba(10, 0, 0, 0.75), rgba(10, 0, 0, 0.85)), url('banner.jpg') center/cover no-repeat; }
+        .vertical-lines { background-image: linear-gradient(to right, rgba(185, 28, 28, 0.12) 1px, transparent 1px); background-size: 30px 100%; }
+
+        .spiky-hover:hover { transform: scale(1.08) rotate(1deg); filter: drop-shadow(0 0 40px #e11d48); }
+        .card-hover { transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); }
+        .card-hover:hover { transform: translateY(-12px) scale(1.03); box-shadow: 0 0 60px -10px #e11d48; }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* SMALL CENTERED REALISTIC CLAW */
+        #clawCanvas {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 420px;
+            height: 420px;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.42;
+            mix-blend-mode: screen;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- REALISTIC FANGS CLAW SCRATCH (small, centered, tiger-style) -->
+    <canvas id="clawCanvas"></canvas>
+
+    <!-- NAVBAR -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-md border-b border-red-900/50">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="#" class="text-2xl font-bold metallic logo-f">FANGS</a>
+            <div class="hidden md:flex gap-8">
+                <a href="#" onclick="smoothScrollTo('hero'); return false;" class="text-gray-300 hover:text-red-500 transition">Home</a>
+                <a href="#" onclick="smoothScrollTo('about'); return false;" class="text-gray-300 hover:text-red-500 transition">About</a>
+                <a href="#" onclick="smoothScrollTo('portfolio'); return false;" class="text-gray-300 hover:text-red-500 transition">Portfolio</a>
+                <a href="#" onclick="smoothScrollTo('services'); return false;" class="text-gray-300 hover:text-red-500 transition">Services</a>
+                <a href="#" onclick="smoothScrollTo('testimonials'); return false;" class="text-gray-300 hover:text-red-500 transition">Testimonials</a>
+                <a href="#" onclick="smoothScrollTo('contact'); return false;" class="text-gray-300 hover:text-red-500 transition">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section id="hero" class="hero-bg vertical-lines min-h-screen flex items-center justify-center relative">
+        <div class="fade-in text-center px-6 relative z-10">
+            <h1 class="text-6xl md:text-8xl metallic mb-4">FANGS VFX</h1>
+            <p class="text-xl md:text-2xl text-gray-400 mb-8">Bloody Motion That Grabs Eyes</p>
+            <div class="flex gap-4 justify-center flex-wrap">
+                <a href="#" onclick="smoothScrollTo('portfolio'); return false;" class="px-8 py-3 bg-red-900 hover:bg-red-800 rounded-lg font-semibold spiky-hover transition">View Work</a>
+                <a href="#" onclick="smoothScrollTo('contact'); return false;" class="px-8 py-3 border border-red-900 hover:border-red-700 rounded-lg spiky-hover transition">Get in Touch</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="fade-in py-24 px-6 relative z-10">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex flex-col md:flex-row items-center gap-8 mb-12">
+                <img src="profile.jpg" alt="FANGS Profile" class="w-48 h-48 rounded-full border-4 border-red-900 object-cover">
+                <div class="text-center md:text-left">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6 metallic">About FANGS</h2>
+                    <p class="text-gray-400 text-lg leading-relaxed">
+                        I create visceral, eye-catching VFX and motion graphics that make audiences stop scrolling. 
+                        From blood soaked intros to cinematic edits, every frame is crafted to grab attention and leave an impression.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PORTFOLIO -->
+    <section id="portfolio" class="fade-in py-24 px-6 relative z-10">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold mb-12 metallic text-center">Portfolio</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card-hover bg-red-950/30 border border-red-900/50 rounded-2xl p-6 cursor-pointer" onclick="openVideoModal('roblox')">
+                    <div class="aspect-video bg-black rounded-xl mb-4 overflow-hidden relative">
+                        <img id="thumb-roblox" src="" alt="Roblox Intro" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/10 transition">
+                            <i class="fas fa-play text-5xl text-red-600"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Roblox Intro</h3>
+                    <p class="text-gray-500">Bloody motion intro for Roblox content</p>
+                </div>
+                <div class="card-hover bg-red-950/30 border border-red-900/50 rounded-2xl p-6 cursor-pointer" onclick="openVideoModal('kevu')">
+                    <div class="aspect-video bg-black rounded-xl mb-4 overflow-hidden relative">
+                        <img id="thumb-kevu" src="" alt="Kevu Re-Edit" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/10 transition">
+                            <i class="fas fa-play text-5xl text-red-600"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Kevu Re-Edit</h3>
+                    <p class="text-gray-500">Cinematic 3D Intro</p>
+                </div>
+                <div class="card-hover bg-red-950/30 border border-red-900/50 rounded-2xl p-6 cursor-pointer" onclick="openVideoModal('video3')">
+                    <div class="aspect-video bg-black rounded-xl mb-4 overflow-hidden relative">
+                        <img id="thumb-video3" src="" alt="Video 3" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/10 transition">
+                            <i class="fas fa-play text-5xl text-red-600"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Minecraft Intro</h3>
+                    <p class="text-gray-500">motion intro for minecraft content</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section id="testimonials" class="fade-in py-24 px-6 relative z-10">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold mb-12 metallic text-center">Testimonials</h2>
+            <div class="flex justify-center">
+                <img id="testimonial-screenshot" src="testemonial1.png" alt="Testimonial Screenshot" class="max-w-full h-auto rounded-xl border-2 border-white mx-auto">
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services" class="fade-in py-24 px-6 relative z-10">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold mb-12 metallic text-center">Services</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card-hover bg-red-950/30 border border-red-900/50 rounded-2xl p-6">
+                    <i class="fas fa-film text-4xl text-red-600 mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Intros & Outros</h3>
+                    <p class="text-gray-500">Custom motion graphics for streamers and creators</p>
+                </div>
+                <div class="card-hover bg-red-950/30 border border-red-900/50 rounded-2xl p-6">
+                    <i class="fas fa-magic text-4xl text-red-600 mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">VFX & Compositing</h3>
+                    <p class="text-gray-500">Blood, gore, and cinematic effects</p>
+                </div>
+                <div class="card-hover bg-red-950/30 border border-red-900/50 rounded-2xl p-6">
+                    <i class="fas fa-cut text-4xl text-red-600 mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">long/short form edits</h3>
+                    <p class="text-gray-500">Punchy edits with professional polish</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="fade-in py-24 px-6 relative z-10">
+        <div class="max-w-2xl mx-auto text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6 metallic">Get in Touch</h2>
+            <p class="text-gray-400 mb-8">Ready to make something bloody awesome? Let's talk.</p>
+            <div class="flex gap-6 justify-center">
+                <a href="https://mail.google.com/mail/?view=cm&to=fangsvfx@gmail.com" target="_blank" class="text-red-500 hover:text-red-400 transition"><i class="fas fa-envelope text-2xl"></i></a>
+                <a href="#" id="x-profile-link" target="_blank" class="text-red-500 hover:text-red-400 transition"><i class="fab fa-x-twitter text-2xl"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-8 border-t border-red-900/50 text-center text-gray-500 relative z-10">
+        <p>© FANGS VFX — Bloody Motion That Grabs Eyes</p>
+    </footer>
+
+    <!-- VIDEO MODAL -->
+    <div id="videoModal" class="video-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);z-index:9999;align-items:center;justify-content:center;padding:20px;">
+        <div style="max-width:1000px;width:100%;position:relative;">
+            <span onclick="closeVideoModal()" style="position:absolute;top:-50px;right:0;font-size:2.5rem;color:#fff;cursor:pointer;">×</span>
+            <div class="aspect-video bg-black rounded-3xl overflow-hidden border-8 border-red-900">
+                <iframe id="youtubePlayer" width="100%" height="100%" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== YOUR VIDEO IDs ====================
+        const ROBLOX_VIDEO_ID = "QYZBWdkmAvE";
+        const KEVU_VIDEO_ID   = "e2gaNyneam4";
+        const VIDEO3_ID       = "CFIn9kYNuRs";
+        const X_PROFILE_URL = "https://x.com/yourusername";
+
+        // Load thumbnails
+        function loadThumbnails() {
+            if (ROBLOX_VIDEO_ID) document.getElementById('thumb-roblox').src = `https://img.youtube.com/vi/${ROBLOX_VIDEO_ID}/maxresdefault.jpg`;
+            if (KEVU_VIDEO_ID) document.getElementById('thumb-kevu').src = `https://img.youtube.com/vi/${KEVU_VIDEO_ID}/maxresdefault.jpg`;
+            if (VIDEO3_ID) document.getElementById('thumb-video3').src = `https://img.youtube.com/vi/${VIDEO3_ID}/maxresdefault.jpg`;
+        }
+        loadThumbnails();
+
+        // Set X link
+        if (X_PROFILE_URL && !X_PROFILE_URL.includes("yourusername")) {
+            document.getElementById('x-profile-link').href = X_PROFILE_URL;
+        }
+
+        function openVideoModal(type) {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('youtubePlayer');
+            let videoId = type === 'roblox' ? ROBLOX_VIDEO_ID : type === 'kevu' ? KEVU_VIDEO_ID : VIDEO3_ID;
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeVideoModal() {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('youtubePlayer');
+            iframe.src = '';
+            modal.style.display = 'none';
+            document.body.style.overflow = 'visible';
+        }
+
+        document.getElementById('videoModal').addEventListener('click', e => { if (e.target.id === 'videoModal') closeVideoModal(); });
+        document.addEventListener('keydown', e => { if (e.key === "Escape") closeVideoModal(); });
+
+        function smoothScrollTo(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Fade-in on scroll
+        const fadeElements = document.querySelectorAll('.fade-in');
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+        fadeElements.forEach(el => fadeObserver.observe(el));
+
+        // Blood rain
+        function createBloodDrop() {
+            const drop = document.createElement('div');
+            drop.style.position = 'fixed'; drop.style.width = '3px';
+            drop.style.height = Math.random() * 70 + 40 + 'px';
+            drop.style.background = '#b91c1c';
+            drop.style.left = Math.random() * 100 + 'vw';
+            drop.style.top = '-100px';
+            drop.style.opacity = Math.random() * 0.7 + 0.3;
+            drop.style.zIndex = '5';
+            document.body.appendChild(drop);
+            let pos = -100, speed = Math.random() * 18 + 22;
+            const fall = setInterval(() => {
+                pos += speed; drop.style.top = pos + 'px';
+                if (pos > window.innerHeight + 100) { clearInterval(fall); drop.remove(); }
+            }, 16);
+        }
+        setInterval(() => { if (Math.random() > 0.55) createBloodDrop(); }, 120);
+
+        // ===================== REALISTIC CENTERED CLAW SCRATCH =====================
+        const canvas = document.getElementById('clawCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 420;
+        canvas.height = 420;
+
+        let drawProgress = 0;   // 0 → 1 (top to bottom reveal)
+        let animationDone = false;
+
+        // 4 realistic claw positions (spaced apart)
+        const claws = [
+            { startX: 70,  startY: 90,  endX: 320, endY: 310, offset: 0 },
+            { startX: 95,  startY: 75,  endX: 345, endY: 295, offset: 1 },
+            { startX: 120, startY: 60,  endX: 370, endY: 280, offset: 2 },
+            { startX: 145, startY: 45,  endX: 395, endY: 265, offset: 3 }
+        ];
+
+        function drawRealisticClaw(claw, progress, index) {
+            const p = Math.min(progress, 1);
+            ctx.save();
+
+            // Red glowing outer scratch
+            ctx.strokeStyle = index === 0 ? '#ff2a2a' : index === 1 ? '#ff4d00' : index === 2 ? '#e11d48' : '#c8102e';
+            ctx.lineWidth = 28 - index * 4;
+            ctx.shadowBlur = 35;
+            ctx.shadowColor = '#ff1a1a';
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            ctx.beginPath();
+            ctx.moveTo(claw.startX, claw.startY);
+
+            const segments = 28;
+            for (let i = 1; i <= Math.floor(segments * p); i++) {
+                const t = i / segments;
+                let x = claw.startX + (claw.endX - claw.startX) * t;
+                let y = claw.startY + (claw.endY - claw.startY) * t;
+
+                // realistic jagged tiger scratch
+                const jitter = 14 - index * 2;
+                x += (Math.sin(t * 18) * jitter) + (Math.random() - 0.5) * 7;
+                y += (Math.cos(t * 14) * jitter * 0.6) + (Math.random() - 0.5) * 5;
+
+                ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // White inner highlight (the "empty / carved" part)
+            ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+            ctx.lineWidth = 9 - index * 2;
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = '#ffffff';
+
+            ctx.beginPath();
+            ctx.moveTo(claw.startX, claw.startY);
+
+            for (let i = 1; i <= Math.floor(segments * p); i++) {
+                const t = i / segments;
+                let x = claw.startX + (claw.endX - claw.startX) * t;
+                let y = claw.startY + (claw.endY - claw.startY) * t;
+
+                x += (Math.sin(t * 18) * 8);
+                y += (Math.cos(t * 14) * 6);
+
+                ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        function animateClawReveal() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (!animationDone) {
+                drawProgress += 0.022;   // speed of scratch reveal
+                if (drawProgress >= 1) {
+                    drawProgress = 1;
+                    animationDone = true;
+                }
+            }
+
+            // Draw claws one by one for nice staggered reveal
+            claws.forEach((claw, i) => {
+                const clawProgress = Math.max(0, Math.min(1, drawProgress - i * 0.18));
+                drawRealisticClaw(claw, clawProgress, i);
+            });
+
+            if (!animationDone) {
+                requestAnimationFrame(animateClawReveal);
+            }
+        }
+
+        // Start the realistic claw reveal once
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                animateClawReveal();
+            }, 900);
+        });
+
+        console.log('%cFANGS VFX LOADED 🔥\nRealistic tiger claw scratch added (top-to-bottom reveal)', 'color:#e11d48; font-family:Impact; font-size:14px');
+    </script>
+</body>
+</html>
