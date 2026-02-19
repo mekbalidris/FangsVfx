@@ -43,7 +43,6 @@
             transform: translateY(0);
         }
 
-        /* SMALL CENTERED REALISTIC CLAW */
         #clawCanvas {
             position: fixed;
             top: 50%;
@@ -60,10 +59,9 @@
 </head>
 <body>
 
-    <!-- REALISTIC FANGS CLAW SCRATCH (small, centered, tiger-style) -->
     <canvas id="clawCanvas"></canvas>
 
-    <!-- NAVBAR -->
+
     <nav class="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-md border-b border-red-900/50">
         <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
             <a href="#" class="text-2xl font-bold metallic logo-f">FANGS</a>
@@ -78,7 +76,7 @@
         </div>
     </nav>
 
-    <!-- HERO -->
+
     <section id="hero" class="hero-bg vertical-lines min-h-screen flex items-center justify-center relative">
         <div class="fade-in text-center px-6 relative z-10">
             <h1 class="text-6xl md:text-8xl metallic mb-4">Fangs VFX</h1>
@@ -90,7 +88,7 @@
         </div>
     </section>
 
-    <!-- ABOUT -->
+
     <section id="about" class="fade-in py-24 px-6 relative z-10">
         <div class="max-w-4xl mx-auto">
             <div class="flex flex-col md:flex-row items-center gap-8 mb-12">
@@ -106,7 +104,6 @@
         </div>
     </section>
 
-    <!-- PORTFOLIO -->
     <section id="portfolio" class="fade-in py-24 px-6 relative z-10">
         <div class="max-w-6xl mx-auto">
             <h2 class="text-4xl md:text-5xl font-bold mb-12 metallic text-center">Portfolio</h2>
@@ -145,7 +142,7 @@
         </div>
     </section>
 
-    <!-- TESTIMONIALS -->
+
     <section id="testimonials" class="fade-in py-24 px-6 relative z-10">
         <div class="max-w-4xl mx-auto">
             <h2 class="text-4xl md:text-5xl font-bold mb-12 metallic text-center">Testimonials</h2>
@@ -155,7 +152,7 @@
         </div>
     </section>
 
-    <!-- SERVICES -->
+
     <section id="services" class="fade-in py-24 px-6 relative z-10">
         <div class="max-w-6xl mx-auto">
             <h2 class="text-4xl md:text-5xl font-bold mb-12 metallic text-center">Services</h2>
@@ -179,7 +176,6 @@
         </div>
     </section>
 
-    <!-- CONTACT -->
     <section id="contact" class="fade-in py-24 px-6 relative z-10">
         <div class="max-w-2xl mx-auto text-center">
             <h2 class="text-4xl md:text-5xl font-bold mb-6 metallic">Get in Touch</h2>
@@ -191,12 +187,12 @@
         </div>
     </section>
 
-    <!-- FOOTER -->
+
     <footer class="py-8 border-t border-red-900/50 text-center text-gray-500 relative z-10">
         <p>© FANGS VFX — Bloody Motion That Grabs Eyes</p>
     </footer>
 
-    <!-- VIDEO MODAL -->
+
     <div id="videoModal" class="video-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);z-index:9999;align-items:center;justify-content:center;padding:20px;">
         <div style="max-width:1000px;width:100%;position:relative;">
             <span onclick="closeVideoModal()" style="position:absolute;top:-50px;right:0;font-size:2.5rem;color:#fff;cursor:pointer;">×</span>
@@ -207,13 +203,13 @@
     </div>
 
     <script>
-        // ==================== YOUR VIDEO IDs ====================
+
         const ROBLOX_VIDEO_ID = "QYZBWdkmAvE";
         const KEVU_VIDEO_ID   = "e2gaNyneam4";
         const VIDEO3_ID       = "CFIn9kYNuRs";
         const X_PROFILE_URL = "https://x.com/yourusername";
 
-        // Load thumbnails
+
         function loadThumbnails() {
             if (ROBLOX_VIDEO_ID) document.getElementById('thumb-roblox').src = `https://img.youtube.com/vi/${ROBLOX_VIDEO_ID}/maxresdefault.jpg`;
             if (KEVU_VIDEO_ID) document.getElementById('thumb-kevu').src = `https://img.youtube.com/vi/${KEVU_VIDEO_ID}/maxresdefault.jpg`;
@@ -221,7 +217,7 @@
         }
         loadThumbnails();
 
-        // Set X link
+
         if (X_PROFILE_URL && !X_PROFILE_URL.includes("yourusername")) {
             document.getElementById('x-profile-link').href = X_PROFILE_URL;
         }
@@ -250,7 +246,7 @@
             document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Fade-in on scroll
+
         const fadeElements = document.querySelectorAll('.fade-in');
         const fadeObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -259,7 +255,6 @@
         }, { threshold: 0.1 });
         fadeElements.forEach(el => fadeObserver.observe(el));
 
-        // Blood rain
         function createBloodDrop() {
             const drop = document.createElement('div');
             drop.style.position = 'fixed'; drop.style.width = '3px';
@@ -278,16 +273,16 @@
         }
         setInterval(() => { if (Math.random() > 0.55) createBloodDrop(); }, 120);
 
-        // ===================== REALISTIC CENTERED CLAW SCRATCH =====================
+
         const canvas = document.getElementById('clawCanvas');
         const ctx = canvas.getContext('2d');
         canvas.width = 420;
         canvas.height = 420;
 
-        let drawProgress = 0;   // 0 → 1 (top to bottom reveal)
+        let drawProgress = 0; 
         let animationDone = false;
 
-        // 4 realistic claw positions (spaced apart)
+
         const claws = [
             { startX: 70,  startY: 90,  endX: 320, endY: 310, offset: 0 },
             { startX: 95,  startY: 75,  endX: 345, endY: 295, offset: 1 },
@@ -299,7 +294,6 @@
             const p = Math.min(progress, 1);
             ctx.save();
 
-            // Red glowing outer scratch
             ctx.strokeStyle = index === 0 ? '#ff2a2a' : index === 1 ? '#ff4d00' : index === 2 ? '#e11d48' : '#c8102e';
             ctx.lineWidth = 28 - index * 4;
             ctx.shadowBlur = 35;
@@ -316,7 +310,7 @@
                 let x = claw.startX + (claw.endX - claw.startX) * t;
                 let y = claw.startY + (claw.endY - claw.startY) * t;
 
-                // realistic jagged tiger scratch
+
                 const jitter = 14 - index * 2;
                 x += (Math.sin(t * 18) * jitter) + (Math.random() - 0.5) * 7;
                 y += (Math.cos(t * 14) * jitter * 0.6) + (Math.random() - 0.5) * 5;
@@ -325,7 +319,7 @@
             }
             ctx.stroke();
 
-            // White inner highlight (the "empty / carved" part)
+
             ctx.strokeStyle = 'rgba(255,255,255,0.85)';
             ctx.lineWidth = 9 - index * 2;
             ctx.shadowBlur = 12;
@@ -353,14 +347,13 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             if (!animationDone) {
-                drawProgress += 0.022;   // speed of scratch reveal
+                drawProgress += 0.022;
                 if (drawProgress >= 1) {
                     drawProgress = 1;
                     animationDone = true;
                 }
             }
 
-            // Draw claws one by one for nice staggered reveal
             claws.forEach((claw, i) => {
                 const clawProgress = Math.max(0, Math.min(1, drawProgress - i * 0.18));
                 drawRealisticClaw(claw, clawProgress, i);
@@ -371,7 +364,6 @@
             }
         }
 
-        // Start the realistic claw reveal once
         window.addEventListener('load', () => {
             setTimeout(() => {
                 animateClawReveal();
