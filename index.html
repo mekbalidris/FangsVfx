@@ -226,6 +226,133 @@
             color: #ef4444; background: rgba(185,28,28,0.15); padding: 3px 9px; border-radius: 4px; margin-bottom: 6px;
         }
 
+        /* Inline player styles */
+        .strip-card.playing, .archive-card.playing { transform: translateY(-8px) scale(1.03); box-shadow: 0 26px 80px rgba(185,28,28,0.35); }
+        .strip-card .thumb-wrap iframe, .archive-card .thumb-wrap iframe { display: block; width: 100%; height: 100%; border: 0; }
+
+        /* ══════════════════════════════════════════════════════════
+           GUEST SPOTLIGHT — the 2 partner videos
+           Fully separate component: floating twin panels on a rail,
+           does not share layout/sizing rules with .strip-card.
+           ══════════════════════════════════════════════════════════ */
+        .spotlight-wrap { position: relative; padding: 34px 0 6px; }
+        .spotlight-rail {
+            position: absolute; top: 50%; left: 0; right: 0; height: 1px; transform: translateY(-50%);
+            background: linear-gradient(90deg, transparent, rgba(185,28,28,0.35) 15%, rgba(185,28,28,0.35) 85%, transparent);
+            z-index: 0;
+        }
+        .spotlight-rail::before, .spotlight-rail::after {
+            content: ''; position: absolute; top: 50%; width: 7px; height: 7px; border-radius: 50%;
+            background: var(--blood-hot); transform: translateY(-50%); box-shadow: 0 0 10px rgba(239,68,68,0.7);
+        }
+        .spotlight-rail::before { left: 0; }
+        .spotlight-rail::after { right: 0; }
+        .spotlight-grid {
+            position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr;
+            gap: clamp(24px, 5vw, 64px); align-items: start;
+        }
+        @media (max-width: 780px) { .spotlight-grid { grid-template-columns: 1fr; gap: 40px; } }
+
+        .spotlight-card {
+            position: relative; border-radius: 18px; overflow: visible; cursor: pointer;
+            animation: spotlightFloat 6s ease-in-out infinite;
+        }
+        .spotlight-card:nth-child(2) { animation-delay: -3s; }
+        @keyframes spotlightFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+        .spotlight-card.side-left { transform-origin: bottom right; }
+        .spotlight-card.side-right { transform-origin: bottom left; }
+
+        .spotlight-card .spotlight-frame {
+            position: relative; border-radius: 18px; overflow: hidden; aspect-ratio: 16/9;
+            border: 1px solid rgba(185,28,28,0.4); background: #000;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(239,68,68,0.06);
+            transition: border-color 0.4s, box-shadow 0.4s;
+        }
+        .spotlight-card:hover .spotlight-frame {
+            border-color: rgba(239,68,68,0.75);
+            box-shadow: 0 30px 80px rgba(185,28,28,0.4), 0 0 0 1px rgba(239,68,68,0.15);
+        }
+        .spotlight-card .spotlight-frame::before {
+            content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+            background: linear-gradient(to top, rgba(3,0,0,0.9) 0%, rgba(3,0,0,0.15) 45%, transparent 70%);
+            transition: opacity 0.4s;
+        }
+        .spotlight-card.playing .spotlight-frame::before { opacity: 0; }
+        .spotlight-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s cubic-bezier(0.23,1,0.32,1), filter 0.5s; }
+        .spotlight-card:hover img { transform: scale(1.06); }
+        .spotlight-card iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 2; }
+
+        .spotlight-play {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0.85); z-index: 2;
+            width: 62px; height: 62px; border-radius: 50%;
+            background: rgba(3,0,0,0.55); backdrop-filter: blur(4px);
+            border: 1.5px solid rgba(239,68,68,0.6);
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.35s, background 0.35s, border-color 0.35s;
+        }
+        .spotlight-card:hover .spotlight-play { transform: translate(-50%,-50%) scale(1); background: rgba(185,28,28,0.85); border-color: rgba(255,255,255,0.4); }
+        .spotlight-play::after {
+            content: ''; position: absolute; inset: -8px; border-radius: 50%; border: 1px solid rgba(239,68,68,0.35);
+            animation: spotlightPulse 2.4s ease-out infinite;
+        }
+        @keyframes spotlightPulse { 0% { transform: scale(0.9); opacity: 0.9; } 100% { transform: scale(1.4); opacity: 0; } }
+
+        .spotlight-info {
+            position: absolute; bottom: 16px; left: 18px; right: 18px; z-index: 2;
+            display: flex; align-items: center; justify-content: flex-end; gap: 10px;
+            transition: opacity 0.3s;
+        }
+        .spotlight-card.playing .spotlight-info { opacity: 0; pointer-events: none; }
+        .spotlight-info .yt-mark { color: rgba(255,255,255,0.55); font-size: 0.85rem; }
+
+        /* ══════════════════════════════════════════════════════════
+           MOTIONS — the 2 archive videos get a slider treatment
+           Separate again from .archive-card grid rules elsewhere.
+           ══════════════════════════════════════════════════════════ */
+        .motion-slider { position: relative; }
+        .motion-track {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 22px;
+        }
+        @media (max-width: 640px) { .motion-track { grid-template-columns: 1fr; } }
+
+        .motion-card {
+            position: relative; border-radius: 16px; overflow: hidden; cursor: pointer;
+            aspect-ratio: 16/9; background: #000;
+            border: 1px solid rgba(185,28,28,0.25);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+            transition: transform 0.5s cubic-bezier(0.23,1,0.32,1), border-color 0.4s, box-shadow 0.4s;
+        }
+        .motion-card:nth-child(1) { animation: motionDrift 7s ease-in-out infinite; }
+        .motion-card:nth-child(2) { animation: motionDrift 7s ease-in-out infinite; animation-delay: -3.5s; }
+        @keyframes motionDrift { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-9px) rotate(-0.4deg); } }
+        .motion-card:nth-child(2).motionDrift { }
+        .motion-card:hover { border-color: rgba(239,68,68,0.6); box-shadow: 0 26px 60px rgba(185,28,28,0.3); animation-play-state: paused; transform: translateY(-6px) scale(1.015); }
+
+        .motion-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s cubic-bezier(0.23,1,0.32,1); }
+        .motion-card:hover img { transform: scale(1.07); }
+        .motion-card::before {
+            content: ''; position: absolute; inset: 0; z-index: 1;
+            background: linear-gradient(to top, rgba(3,0,0,0.85) 0%, transparent 60%);
+            transition: opacity 0.35s;
+        }
+        .motion-card.playing::before { opacity: 0; }
+        .motion-card iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 2; }
+        .motion-card .motion-play {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0.85); z-index: 2;
+            width: 48px; height: 48px; border-radius: 50%; background: rgba(185,28,28,0.8);
+            border: 1.5px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+        .motion-card:hover .motion-play { transform: translate(-50%,-50%) scale(1); }
+        .motion-card.playing .motion-play { opacity: 0; }
+        .motion-card .motion-tag {
+            position: absolute; top: 12px; left: 12px; z-index: 2;
+            font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: #ef4444;
+            background: rgba(185,28,28,0.18); border: 1px solid rgba(185,28,28,0.35);
+            padding: 3px 9px; border-radius: 4px; transition: opacity 0.3s;
+        }
+        .motion-card.playing .motion-tag { opacity: 0; }
+
         /* ── Bio strip (replaces About page) ── */
         .bio-strip {
             border-top: 1px solid rgba(185,28,28,0.25); border-bottom: 1px solid rgba(185,28,28,0.25);
@@ -275,6 +402,69 @@
         .reveal-left { opacity: 0; transform: translateX(-40px); }
         .reveal-right { opacity: 0; transform: translateX(40px); }
         .reveal-scale { opacity: 0; transform: scale(0.92); }
+
+        /* ══════════════════════════════════════════════════════════
+           CUSTOM CURSOR — "Fang Bite"
+           A blood-red core dot with two fang marks trailing behind
+           it on a lagging ring. Fangs snap open + the ring flashes
+           hot red over anything clickable. Fits the brand, not just
+           decoration.
+           ══════════════════════════════════════════════════════════ */
+        .has-custom-cursor, .has-custom-cursor * { cursor: none !important; }
+
+        #cursorDot {
+            position: fixed; top: 0; left: 0; width: 9px; height: 9px; border-radius: 50%;
+            background: var(--blood-hot); z-index: 10001; pointer-events: none;
+            transform: translate3d(-50%, -50%, 0);
+            box-shadow: 0 0 10px 2px rgba(239,68,68,0.85), 0 0 22px 6px rgba(185,28,28,0.4);
+            transition: width 0.25s ease, height 0.25s ease, background 0.25s ease, opacity 0.2s ease;
+            will-change: transform;
+        }
+        #cursorDot.hover { width: 5px; height: 5px; background: #fff; }
+        #cursorDot.hidden { opacity: 0; }
+        #cursorDot.click { width: 6px; height: 6px; }
+
+        #cursorRing {
+            position: fixed; top: 0; left: 0; width: 42px; height: 42px; z-index: 10000; pointer-events: none;
+            transform: translate3d(-50%, -50%, 0);
+            transition: width 0.35s cubic-bezier(0.23,1,0.32,1), height 0.35s cubic-bezier(0.23,1,0.32,1), opacity 0.2s ease;
+            will-change: transform;
+        }
+        #cursorRing.hidden { opacity: 0; }
+        #cursorRing svg { width: 100%; height: 100%; overflow: visible; }
+        #cursorRing .ring-circle {
+            fill: none; stroke: rgba(239,68,68,0.55); stroke-width: 1;
+            transition: stroke 0.3s ease, stroke-width 0.3s ease;
+        }
+        #cursorRing .fang {
+            fill: rgba(239,68,68,0.9); transform-box: fill-box; transform-origin: top center;
+            transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), fill 0.3s ease, opacity 0.3s ease;
+            opacity: 0.85;
+        }
+        #cursorRing .fang.left { transform: translateX(-1px) rotate(0deg); }
+        #cursorRing .fang.right { transform: translateX(1px) rotate(0deg); }
+
+        /* Hover state: ring grows, glows hotter, fangs bare themselves outward */
+        #cursorRing.hover { width: 72px; height: 72px; }
+        #cursorRing.hover .ring-circle { stroke: rgba(239,68,68,0.85); stroke-width: 1.4; }
+        #cursorRing.hover .fang.left { transform: translateX(-4px) rotate(-18deg); }
+        #cursorRing.hover .fang.right { transform: translateX(4px) rotate(18deg); }
+
+        #cursorLabel {
+            position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%);
+            font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.12em; font-size: 0.95rem;
+            color: #fff; text-transform: uppercase; white-space: nowrap; opacity: 0; transition: opacity 0.25s ease;
+            text-shadow: 0 0 8px rgba(239,68,68,0.9), 0 0 16px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.9);
+        }
+        #cursorRing.hover #cursorLabel { opacity: 1; }
+
+        /* Click pulse ripple */
+        .cursor-pulse {
+            position: fixed; top: 0; left: 0; width: 10px; height: 10px; border-radius: 50%;
+            border: 1.5px solid rgba(239,68,68,0.7); pointer-events: none; z-index: 9999;
+            transform: translate3d(-50%, -50%, 0); animation: cursorPulseOut 0.6s ease-out forwards;
+        }
+        @keyframes cursorPulseOut { to { width: 46px; height: 46px; opacity: 0; border-color: rgba(239,68,68,0); } }
     </style>
 </head>
 <body>
@@ -286,6 +476,17 @@
 
     <div class="grain"></div>
     <canvas id="bloodCanvas"></canvas>
+
+    <!-- Custom cursor: blood dot + trailing fang ring -->
+    <div id="cursorDot" class="hidden"></div>
+    <div id="cursorRing" class="hidden">
+        <svg viewBox="0 0 64 64">
+            <circle class="ring-circle" cx="32" cy="32" r="30"></circle>
+            <path class="fang left" d="M 24 44 L 20 56 L 28 47 Z"></path>
+            <path class="fang right" d="M 40 44 L 44 56 L 36 47 Z"></path>
+        </svg>
+        <span id="cursorLabel"></span>
+    </div>
 
     <!-- Nav -->
     <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-black/60 backdrop-blur-md border-b border-red-900/30">
@@ -362,8 +563,8 @@
     <section class="relative z-10 py-14 px-6">
         <div class="max-w-4xl mx-auto grid grid-cols-3 gap-8 text-center">
             <div class="reveal">
-                <div class="stat-num" data-count="20">0</div>
-                <p class="text-gray-500 text-sm mt-2 uppercase tracking-widest">Projects</p>
+                <div class="stat-num" data-views="500000">0</div>
+                <p class="text-gray-500 text-sm mt-2 uppercase tracking-widest">Views</p>
             </div>
             <div class="reveal">
                 <div class="font-display text-3xl md:text-4xl metallic mt-1">VFX</div>
@@ -405,14 +606,23 @@
             <!-- Filmstrip -->
             <div id="filmstrip" class="filmstrip reveal"></div>
 
+            <!-- Guest Spotlight: 2 partner videos, floating twin panels either side of a center rail -->
+            <div class="spotlight-wrap mt-16 reveal">
+                <div class="spotlight-rail"></div>
+                <div id="spotlightGrid" class="spotlight-grid"></div>
+            </div>
+
             <!-- Archive -->
-            <div class="mt-20">
+            <div class="mt-24">
                 <div class="flex items-end justify-between mb-8 reveal">
                     <div>
+                        <p class="section-label mb-1">More Motion Work</p>
                         <h3 class="font-display text-2xl md:text-3xl metallic">MOTIONS</h3>
                     </div>
                 </div>
-                <div id="archiveGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+                <div class="motion-slider reveal">
+                    <div id="archiveGrid" class="motion-track"></div>
+                </div>
             </div>
         </div>
     </section>
@@ -502,6 +712,12 @@
             { id: 'CFIn9kYNuRs', tag: 'Intro',    start: 0 },
         ];
 
+        // ── Partner / creator videos to display above MOTIONS ──
+        const PARTNER = [
+            { id: '3xgFzPZTYgI', tag: 'Partner', start: 0 },
+            { id: 'ZayGDGPHPGQ', tag: 'Partner', start: 0 },
+        ];
+
         let activeIndex = 0;
 
         function thumbUrl(id) { return `https://img.youtube.com/vi/${id}/maxresdefault.jpg`; }
@@ -533,24 +749,58 @@
         });
         loadFeatured(0);
 
-        // Build archive grid (opens in a new tab — kept simple, no modal needed for a 3-item grid)
+        // ── Guest Spotlight: 2 partner videos, each plays inline on its own panel ──
+        const spotlightGrid = document.getElementById('spotlightGrid');
+        const sideClass = ['side-left', 'side-right'];
+        PARTNER.forEach((item, idx) => {
+            const card = document.createElement('div');
+            card.className = `spotlight-card ${sideClass[idx] || ''}`;
+            card.innerHTML = `
+                <div class="spotlight-frame">
+                    <img src="${thumbUrl(item.id)}" alt="Guest collab video" loading="lazy"
+                         onerror="this.src='https://img.youtube.com/vi/${item.id}/hqdefault.jpg'">
+                    <div class="spotlight-play"><i class="fas fa-play text-white text-sm ml-0.5"></i></div>
+                    <div class="spotlight-info">
+                        <i class="fab fa-youtube yt-mark"></i>
+                    </div>
+                </div>`;
+
+            card.addEventListener('click', () => {
+                if (card.classList.contains('playing')) return;
+                const frame = card.querySelector('.spotlight-frame');
+                const iframe = document.createElement('iframe');
+                iframe.src = `https://www.youtube.com/embed/${item.id}?rel=0&autoplay=1`;
+                iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+                iframe.setAttribute('allowfullscreen', '');
+                frame.appendChild(iframe);
+                card.classList.add('playing');
+            });
+
+            spotlightGrid.appendChild(card);
+        });
+
+        // ── MOTIONS: 2 archive videos as a drifting slider pair, each plays inline ──
         const archiveGrid = document.getElementById('archiveGrid');
         ARCHIVE.forEach((item, i) => {
-            const card = document.createElement('a');
-            card.href = `https://www.youtube.com/watch?v=${item.id}`;
-            card.target = '_blank';
-            card.rel = 'noopener';
-            card.className = 'archive-card reveal-scale block';
-            card.style.transitionDelay = `${i * 0.06}s`;
+            const card = document.createElement('div');
+            card.className = 'motion-card reveal-scale';
+            card.style.transitionDelay = `${i * 0.08}s`;
             card.innerHTML = `
-                <div class="thumb-wrap">
-                    <img class="thumb-img" src="${thumbUrl(item.id)}" alt="${item.tag}" loading="lazy"
-                         onerror="this.src='https://img.youtube.com/vi/${item.id}/hqdefault.jpg'">
-                    <div class="play-btn"><i class="fas fa-play text-white text-sm ml-0.5"></i></div>
-                </div>
-                <div class="card-info">
-                    <span class="card-tag">${item.tag}</span>
-                </div>`;
+                <img src="${thumbUrl(item.id)}" alt="${item.tag}" loading="lazy"
+                     onerror="this.src='https://img.youtube.com/vi/${item.id}/hqdefault.jpg'">
+                <span class="motion-tag">${item.tag}</span>
+                <div class="motion-play"><i class="fas fa-play text-white text-sm ml-0.5"></i></div>`;
+
+            card.addEventListener('click', () => {
+                if (card.classList.contains('playing')) return;
+                const iframe = document.createElement('iframe');
+                iframe.src = `https://www.youtube.com/embed/${item.id}?rel=0&autoplay=1`;
+                iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+                iframe.setAttribute('allowfullscreen', '');
+                card.appendChild(iframe);
+                card.classList.add('playing');
+            });
+
             archiveGrid.appendChild(card);
         });
 
@@ -595,13 +845,23 @@
                 gsap.from(el, { scrollTrigger: { trigger: el, start: 'top 90%' }, width: 0, duration: 0.8, ease: 'power2.out' });
             });
 
-            document.querySelectorAll('[data-count]').forEach(el => {
-                const target = parseInt(el.dataset.count);
+            function formatNumber(n) {
+                if (n >= 1000000) return (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+                if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+                return n.toString();
+            }
+
+            document.querySelectorAll('[data-count],[data-views]').forEach(el => {
+                const isViews = el.dataset.views !== undefined;
+                const target = isViews ? parseInt(el.dataset.views, 10) : parseInt(el.dataset.count, 10);
                 ScrollTrigger.create({
                     trigger: el, start: 'top 85%', once: true,
                     onEnter: () => gsap.to({ val: 0 }, {
                         val: target, duration: 1.8, ease: 'power2.out',
-                        onUpdate: function () { el.textContent = Math.round(this.targets()[0].val) + '+'; }
+                        onUpdate: function () {
+                            const val = Math.round(this.targets()[0].val);
+                            el.textContent = isViews ? formatNumber(val) + '+' : val + '+';
+                        }
                     })
                 });
             });
@@ -668,6 +928,77 @@
             }, 16);
         }
         if (!reduceMotion) setInterval(() => { if (Math.random() > 0.6) createBloodDrop(); }, 200);
+
+        // ── Custom cursor: "Fang Bite" ──
+        (function initCustomCursor() {
+            const isFinePointer = window.matchMedia('(pointer: fine)').matches;
+            if (!isFinePointer) return; // leave native cursor on touch/coarse-pointer devices
+
+            document.documentElement.classList.add('has-custom-cursor');
+            const dot = document.getElementById('cursorDot');
+            const ring = document.getElementById('cursorRing');
+            const label = document.getElementById('cursorLabel');
+
+            let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+            let ringX = mouseX, ringY = mouseY;
+            let visible = false;
+
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX; mouseY = e.clientY;
+                dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+                if (!visible) { visible = true; dot.classList.remove('hidden'); ring.classList.remove('hidden'); }
+            }, { passive: true });
+
+            document.addEventListener('mouseleave', () => { dot.classList.add('hidden'); ring.classList.add('hidden'); });
+            document.addEventListener('mouseenter', () => { if (visible) { dot.classList.remove('hidden'); ring.classList.remove('hidden'); } });
+
+            // Lagging ring follow, smoothed each frame
+            function tick() {
+                ringX += (mouseX - ringX) * 0.16;
+                ringY += (mouseY - ringY) * 0.16;
+                ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
+                requestAnimationFrame(tick);
+            }
+            tick();
+
+            // Hover states over anything clickable — fangs bare themselves + label appears
+            const hoverMap = [
+                { sel: 'a, button, .skill-tag', text: '' },
+                { sel: '.strip-card, .archive-card, .motion-card, .spotlight-card', text: 'PLAY' },
+                { sel: '#playerYoutubeLink', text: 'YOUTUBE' },
+            ];
+
+            function attachHovers() {
+                hoverMap.forEach(({ sel, text }) => {
+                    document.querySelectorAll(sel).forEach((el) => {
+                        if (el.dataset.cursorBound) return;
+                        el.dataset.cursorBound = '1';
+                        el.addEventListener('mouseenter', () => {
+                            ring.classList.add('hover'); dot.classList.add('hover');
+                            label.textContent = text;
+                        });
+                        el.addEventListener('mouseleave', () => {
+                            ring.classList.remove('hover'); dot.classList.remove('hover');
+                            label.textContent = '';
+                        });
+                    });
+                });
+            }
+            attachHovers();
+            // Re-scan periodically since video cards are injected dynamically after load
+            setInterval(attachHovers, 1200);
+
+            // Click pulse — a quick blood-ring burst on every click
+            window.addEventListener('mousedown', (e) => {
+                const pulse = document.createElement('div');
+                pulse.className = 'cursor-pulse';
+                pulse.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
+                document.body.appendChild(pulse);
+                setTimeout(() => pulse.remove(), 650);
+                dot.classList.add('click');
+                setTimeout(() => dot.classList.remove('click'), 180);
+            });
+        })();
     </script>
 </body>
 </html>
